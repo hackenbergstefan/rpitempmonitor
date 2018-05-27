@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-from flask import Flask
+from flask import Flask, jsonify, render_template
 from MAX31865.max31865 import MAX31865
 
 app = Flask('rpitempmonitor')
@@ -17,9 +17,14 @@ max31865 = MAX31865(
 
 @app.route('/')
 def index():
-    return 'Temperature: %0.2f °C' % max31865.temperature()
+    return render_template('index.html')
+
+
+@app.route('/temperature')
+def temperature():
+    return jsonify(temperature=max31865.temperature())
 
 
 if __name__ == '__main__':
     with max31865:
-        app.run(host='0.0.0.0')
+        app.run(host='0.0.0.0', debug=True)

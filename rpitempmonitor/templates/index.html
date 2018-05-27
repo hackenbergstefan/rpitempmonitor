@@ -1,0 +1,95 @@
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://code.highcharts.com/stock/highstock.js"></script>
+        <script type=text/javascript>
+            $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+        </script>
+        <script type=text/javascript>
+         $.getJSON($SCRIPT_ROOT + '/temperature', null, function(data){
+             $('#main').text(data.temperature);
+         });
+        </script>
+        <script type=text/javascript>
+            Highcharts.setOptions({
+                global: {
+                    useUTC: false
+                }
+            });
+
+            // Create the chart
+            $(function (){
+                // Create the chart
+                Highcharts.stockChart('container', {
+                    chart: {
+                        events: {
+                            load: function () {
+                                // set up the updating of the chart each second
+                                var series = this.series[0];
+                                setInterval(function () {
+                                    $.getJSON($SCRIPT_ROOT + '/temperature', null, function(data){
+                                        var x = (new Date()).getTime();
+                                        series.addPoint([x, data.temperature], true, true);
+                                    });
+                                }, 1000);
+                            }
+                        }
+                    },
+
+                    rangeSelector: {
+                        buttons: [{
+                        count: 60,
+                        type: 'minute',
+                        text: '1M'
+                        }, {
+                        count: 5*60,
+                        type: 'minute',
+                        text: '5M'
+                        }, {
+                        type: 'all',
+                        text: 'All'
+                        }],
+                        inputEnabled: false,
+                        selected: 0
+                    },
+
+                    title: {
+                        text: 'Live random data'
+                    },
+
+                    exporting: {
+                        enabled: false
+                    },
+
+                    plotOptions: {
+                        series: {
+                            lineWidth: 6
+                        }
+                    },
+
+                    series: [{
+                        name: 'Temperature',
+                        data: (function () {
+                        // generate an array of random data
+                        var data = [],
+                            time = (new Date()).getTime(),
+                            i;
+
+                        for (i = -60; i <= 0; i += 1) {
+                            data.push([
+                            time + i * 1000,
+                            0
+                            ]);
+                        }
+                        return data;
+                        }())
+                    }]
+                });
+            });
+
+         </script>
+    </head>
+    <body>
+        <div id="container" style="height: 100%; min-width: 310px"></div>
+    </body>
+</html>
