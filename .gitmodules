@@ -1,0 +1,3 @@
+[submodule "rpitempmonitor/MAX31865"]
+	path = rpitempmonitor/MAX31865
+	url = https://github.com/hackenbergstefan/MAX31865
