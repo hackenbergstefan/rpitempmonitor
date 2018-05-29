@@ -54,7 +54,7 @@
                     },
 
                     title: {
-                        text: 'Live random data'
+                        text: 'Temperature',
                     },
 
                     exporting: {
@@ -64,6 +64,15 @@
                     plotOptions: {
                         series: {
                             lineWidth: 6
+                        }
+                    },
+
+                    yAxis: {
+                        labels: {
+                            format: '{value:.2f} °C',
+                            style: {
+                                fontSize: '30px'
+                            }
                         }
                     },
 
