@@ -3,7 +3,10 @@
 
 
 from flask import Flask, jsonify, render_template
-from MAX31865.max31865 import MAX31865
+try:
+    from MAX31865.max31865 import MAX31865
+except ModuleNotFoundError:
+    from max31865mock import MAX31865
 
 app = Flask('rpitempmonitor')
 
