@@ -6,11 +6,6 @@
             $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
         </script>
         <script type=text/javascript>
-         $.getJSON($SCRIPT_ROOT + '/temperature', null, function(data){
-             $('#main').text(data.temperature);
-         });
-        </script>
-        <script type=text/javascript>
             function requestData () {
                 // set up the updating of the chart each second
                 var series = this.series[0];
@@ -22,15 +17,8 @@
                 }, 1000);
             }
 
-            Highcharts.setOptions({
-                global: {
-                    useUTC: false
-                }
-            });
-
             // Create the chart
             $(function (){
-                // Create the chart
                 Highcharts.stockChart('container', {
                     chart: {
                         events: {
@@ -63,12 +51,6 @@
                         enabled: false
                     },
 
-                    plotOptions: {
-                        series: {
-                            lineWidth: 6
-                        }
-                    },
-
                     yAxis: {
                         labels: {
                             format: '{value:.2f} °C',
@@ -79,8 +61,7 @@
                     },
 
                     series: [{
-                        name: 'Temperature',
-                        data: [[(new Date()).getTime(),0]]
+                        data: []
                     }]
                 });
             });

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
+import os
 import time
 from flask import Flask, jsonify, render_template
 from datalogger import DataLogger
@@ -30,6 +31,16 @@ def index():
     global datalogger
     datalogger = DataLogger('data_%d.csv' % int(time.time()))
     return render_template('index.html')
+
+
+@app.route('/<logged_data>')
+def data(logged_data):
+    if not os.path.exists(logged_data):
+        return '<br/>'.join(os.listdir('.'))
+    data = DataLogger(logged_data).read()
+    start_time = float(data[0][0])
+    data = [[float(a) - start_time, float(b)] for a, b in data]
+    return render_template('data.html', data=data, data_filename=logged_data)
 
 
 @app.route('/temperature')

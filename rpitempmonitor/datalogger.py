@@ -20,6 +20,12 @@ class DataLogger(object):
         if len(self.data) % self.write_interval:
             self.save()
 
+    def read(self):
+        """
+        Read data from file.
+        """
+        return getattr(self, 'read_%s' % os.path.splitext(self.logger_file)[1][1:])()
+
     def save(self):
         """
         Save data to file.
@@ -33,3 +39,12 @@ class DataLogger(object):
         with open(self.logger_file, 'w') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerows(self.data)
+
+    def read_csv(self):
+        """
+        Read data from csv file.
+        """
+        with open(self.logger_file) as csvfile:
+            reader = csv.reader(csvfile)
+            self.data = list(reader)
+        return self.data
